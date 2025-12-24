@@ -1,0 +1,46 @@
+[repo]
+git_dir = "/home/andriishafar/.local/share/hometree/repo.git"
+work_tree = "/home/andriishafar"
+
+[manage]
+roots = [
+    ".config/",
+    ".local/bin/",
+    ".local/share/systemd/user/",
+    ".local/share/applications/",
+]
+extra_files = [".bashrc"]
+allow_outside = true
+
+[ignore]
+patterns = [
+    ".ssh/**",
+    ".gnupg/**",
+    ".local/share/keyrings/**",
+    ".local/share/kwalletd/**",
+    ".pki/**",
+    ".mozilla/**",
+    ".config/google-chrome/**",
+    ".config/chromium/**",
+    ".config/BraveSoftware/**",
+    "**/*token*",
+    "**/*secret*",
+]
+
+[watch]
+enabled = false
+debounce_ms = 500
+auto_stage_tracked_only = true
+auto_add_new = false
+auto_add_allow_patterns = []
+
+[snapshot]
+
+[secrets]
+enabled = false
+backend = "age"
+sidecar_suffix = ".age"
+recipients = []
+identity_files = []
+rules = []
+backup_policy = "encrypt"
