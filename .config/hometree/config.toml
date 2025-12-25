@@ -10,6 +10,10 @@ paths = [
     ".gitconfig",
     ".config/hometree/config.toml",
     ".profile",
+    "environment.sh",
+    "src/charidy/bootstrap.sh",
+    ".var/app/com.github.wwmm.easyeffects/config/easyeffects/db",
+    ".var/app/com.github.wwmm.easyeffects/data/easyeffects/output",
 ]
 
 [ignore]

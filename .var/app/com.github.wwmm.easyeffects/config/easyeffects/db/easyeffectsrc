@@ -1,0 +1,19 @@
+[Presets]
+lastLoadedOutputPreset=GentleDynamics Feather Loudness
+
+[StreamInputs]
+inputDevice=alsa_input.usb-Corsair_CORSAIR_VIRTUOSO_MAX_WIRELESS_Gaming_Receiver_A9SWC432060FQR-00.mono-fallback
+
+[StreamOutputs]
+mostUsedPresets=GentleDynamics Feather Loudness
+outputDevice=alsa_output.usb-Corsair_CORSAIR_VIRTUOSO_MAX_WIRELESS_Gaming_Receiver_A9SWC432060FQR-00.analog-stereo
+plugins=filter#0,multiband_compressor#0,equalizer#0,compressor#0,stereo_tools#0,limiter#0,level_meter#0
+usedPresets=GentleDynamics Feather Loudness:2
+visiblePage=pluginsPage
+visiblePlugin=equalizer#0
+
+[Window]
+autostartOnLogin=true
+height=931
+lastLoadedOutputPreset=GentleDynamics Feather Loudness
+width=1377
