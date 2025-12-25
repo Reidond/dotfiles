@@ -3,29 +3,18 @@ git_dir = "/home/andriishafar/.local/share/hometree/repo.git"
 work_tree = "/home/andriishafar"
 
 [manage]
-roots = [
-    ".config/",
-    ".local/bin/",
-    ".local/share/systemd/user/",
-    ".local/share/applications/",
+roots = []
+extra_files = [
+    ".bashrc",
+    ".bash_profile",
+    ".bash-preexec.sh",
+    ".gitconfig",
+    ".config/hometree/config.toml",
 ]
-extra_files = [".bashrc"]
 allow_outside = true
 
 [ignore]
-patterns = [
-    ".ssh/**",
-    ".gnupg/**",
-    ".local/share/keyrings/**",
-    ".local/share/kwalletd/**",
-    ".pki/**",
-    ".mozilla/**",
-    ".config/google-chrome/**",
-    ".config/chromium/**",
-    ".config/BraveSoftware/**",
-    "**/*token*",
-    "**/*secret*",
-]
+patterns = []
 
 [watch]
 enabled = false
