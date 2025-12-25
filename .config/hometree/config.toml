@@ -16,7 +16,11 @@ paths = [
 ]
 
 [ignore]
-patterns = ["environment.sh"]
+patterns = [
+    "environment.sh",
+    ".ssh/config",
+    ".ssh/github.pub",
+]
 
 [watch]
 enabled = false
@@ -37,3 +41,9 @@ backup_policy = "encrypt"
 
 [[secrets.rules]]
 path = "environment.sh"
+
+[[secrets.rules]]
+path = ".ssh/config"
+
+[[secrets.rules]]
+path = ".ssh/github.pub"
