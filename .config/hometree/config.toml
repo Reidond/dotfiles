@@ -3,15 +3,14 @@ git_dir = "/home/andriishafar/.local/share/hometree/repo.git"
 work_tree = "/home/andriishafar"
 
 [manage]
-roots = []
-extra_files = [
+paths = [
     ".bashrc",
     ".bash_profile",
     ".bash-preexec.sh",
     ".gitconfig",
     ".config/hometree/config.toml",
+    ".profile",
 ]
-allow_outside = true
 
 [ignore]
 patterns = []
