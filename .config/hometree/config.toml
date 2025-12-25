@@ -10,14 +10,13 @@ paths = [
     ".gitconfig",
     ".config/hometree/config.toml",
     ".profile",
-    "environment.sh",
     "src/charidy/bootstrap.sh",
     ".var/app/com.github.wwmm.easyeffects/config/easyeffects/db",
     ".var/app/com.github.wwmm.easyeffects/data/easyeffects/output",
 ]
 
 [ignore]
-patterns = []
+patterns = ["environment.sh"]
 
 [watch]
 enabled = false
@@ -29,10 +28,12 @@ auto_add_allow_patterns = []
 [snapshot]
 
 [secrets]
-enabled = false
+enabled = true
 backend = "age"
 sidecar_suffix = ".age"
-recipients = []
-identity_files = []
-rules = []
+recipients = ["age1fud0m6700d43m8ne35qsunk07umfepzxd9hw59kh0uyu7u6jr5csgfw4c7"]
+identity_files = ["/home/andriishafar/identity.txt"]
 backup_policy = "encrypt"
+
+[[secrets.rules]]
+path = "environment.sh"
