@@ -1,6 +1,6 @@
 # .bashrc
 
-source ~/environment.sh
+[[ -f ~/environment.sh ]] && source ~/environment.sh
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
@@ -25,9 +25,10 @@ if [ -d ~/.bashrc.d ]; then
     done
 fi
 unset rc
-eval "$($HOME/.local/bin/mise activate bash)"
+[[ -x "$HOME/.local/bin/mise" ]] && eval "$($HOME/.local/bin/mise activate bash)"
 
 # opencode
-export PATH=/home/andriishafar/.opencode/bin:$PATH
+[[ -d "$HOME/.opencode/bin" ]] && export PATH="$HOME/.opencode/bin:$PATH"
 
-export PATH="$HOME/.cargo/bin:$PATH"
+# cargo/rust
+[[ -d "$HOME/.cargo/bin" ]] && export PATH="$HOME/.cargo/bin:$PATH"
