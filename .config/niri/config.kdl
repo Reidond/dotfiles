@@ -1,0 +1,384 @@
+// Niri config with noctalia-shell integration
+// Display: DP-3 @ 3840x2160 160Hz | GPU: AMD RX 9070
+
+// ============================================================================
+// INPUT
+// ============================================================================
+
+input {
+    keyboard {
+        xkb {
+            layout "us,ua"
+            options "grp:alt_shift_toggle"
+        }
+        repeat-delay 300
+        repeat-rate 50
+    }
+
+    touchpad {
+        tap
+        dwt
+        natural-scroll
+        accel-speed 0.2
+    }
+
+    mouse {
+        accel-speed 0.0
+        accel-profile "flat"
+    }
+
+    // Disable cursor hiding (keeps it visible)
+    // warp-mouse-to-focus
+}
+
+// ============================================================================
+// OUTPUT / DISPLAY
+// ============================================================================
+
+output "PNP(AOC) U27G3X 2PNQ9HA002466" {
+    mode "3840x2160@160.001"
+    scale 1.6
+    position x=0 y=0
+}
+
+// ============================================================================
+// LAYOUT - GNOME-like styling
+// ============================================================================
+
+layout {
+    // Gaps between windows (GNOME-like spacing)
+    gaps 12
+
+    // Center focused column when there's space
+    center-focused-column "never"
+
+    // Preset column widths
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+    }
+
+    // Default column width
+    default-column-width { proportion 0.5; }
+
+    // Focus ring - GNOME-like accent color
+    focus-ring {
+        width 2
+        active-color "#3584e4"      // GNOME blue accent
+        inactive-color "#77767b"    // GNOME gray
+    }
+
+    // Border - subtle GNOME-like styling  
+    border {
+        width 1
+        active-color "#3584e4"
+        inactive-color "#3d3846"
+    }
+
+    // Use struts for the noctalia bar area
+    struts {
+        top 0
+        // left 48  // Uncomment if using dock on left
+    }
+}
+
+// ============================================================================
+// WINDOW RULES - Noctalia required settings
+// ============================================================================
+
+// Global window rule for GNOME-like rounded corners
+window-rule {
+    geometry-corner-radius 12
+    clip-to-geometry true
+}
+
+// Make popups/dialogs float
+window-rule {
+    match is-floating=true
+    // Floating windows styling
+}
+
+// ============================================================================
+// LAYER RULES - Noctalia wallpaper/overview
+// ============================================================================
+
+// Option 1: Blurred Overview Wallpaper (recommended)
+layer-rule {
+    match namespace="^noctalia-overview*"
+    place-within-backdrop true
+}
+
+// Noctalia bar - ensure it's above everything
+layer-rule {
+    match namespace="^noctalia*"
+}
+
+// ============================================================================
+// DEBUG - Required for Noctalia
+// ============================================================================
+
+debug {
+    // Allows notification actions and window activation from Noctalia
+    honor-xdg-activation-with-invalid-serial
+}
+
+// ============================================================================
+// ANIMATIONS - Smooth GNOME-like feel
+// ============================================================================
+
+animations {
+    // Smooth and quick like GNOME
+    slowdown 0.8
+
+    workspace-switch {
+        spring damping-ratio=1.0 stiffness=1000 epsilon=0.0001
+    }
+
+    window-open {
+        duration-ms 200
+        curve "ease-out-expo"
+    }
+
+    window-close {
+        duration-ms 150
+        curve "ease-out-quad"
+    }
+
+    horizontal-view-movement {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
+    }
+
+    window-movement {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
+    }
+
+    window-resize {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
+    }
+
+    config-notification-open-close {
+        spring damping-ratio=0.6 stiffness=1000 epsilon=0.001
+    }
+}
+
+// ============================================================================
+// CURSOR
+// ============================================================================
+
+cursor {
+    xcursor-theme "Adwaita"
+    xcursor-size 24
+}
+
+// ============================================================================
+// ENVIRONMENT
+// ============================================================================
+
+environment {
+    QT_QPA_PLATFORMTHEME "gtk3"
+    GDK_SCALE "1.75"
+    XCURSOR_THEME "Adwaita"
+    XCURSOR_SIZE "24"
+    TERMINAL "ghostty"
+}
+
+// ============================================================================
+// SPAWN AT STARTUP
+// ============================================================================
+
+spawn-at-startup "qs" "-c" "noctalia-shell"
+
+// Portal for screen sharing
+spawn-at-startup "/usr/libexec/xdg-desktop-portal-gnome"
+
+// Polkit agent
+spawn-at-startup "/usr/libexec/polkit-kde-authentication-agent-1"
+
+// ============================================================================
+// SCREENSHOT
+// ============================================================================
+
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+
+// ============================================================================
+// HOTKEY FILTER
+// ============================================================================
+
+hotkey-overlay {
+    skip-at-startup
+}
+
+// ============================================================================
+// KEYBINDS
+// ============================================================================
+
+binds {
+    // -------------------------------------------------------------------------
+    // NOCTALIA SHELL BINDS
+    // -------------------------------------------------------------------------
+    
+    // Core Noctalia
+    Mod+Space { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
+    Mod+S { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "controlCenter" "toggle"; }
+    Mod+Comma { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "settings" "toggle"; }
+    Mod+Escape { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "sessionMenu" "toggle"; }
+    
+    // Clipboard & utilities
+    Mod+V { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "clipboard"; }
+    Mod+C { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "calculator"; }
+    Mod+Period { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "emoji"; }
+    
+    // Lock screen
+    Mod+L { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "lockScreen" "lock"; }
+    
+    // Audio controls
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "increase"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "decrease"; }
+    XF86AudioMute allow-when-locked=true { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "muteOutput"; }
+    XF86AudioMicMute allow-when-locked=true { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "muteInput"; }
+    
+    // Media controls
+    XF86AudioPlay allow-when-locked=true { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "media" "playPause"; }
+    XF86AudioPause allow-when-locked=true { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "media" "pause"; }
+    XF86AudioNext allow-when-locked=true { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "media" "next"; }
+    XF86AudioPrev allow-when-locked=true { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "media" "previous"; }
+    
+    // Brightness controls
+    XF86MonBrightnessUp allow-when-locked=true { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "increase"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "decrease"; }
+    
+    // Screen recording
+    Mod+Shift+R { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "screenRecorder" "toggle"; }
+    
+    // Notifications
+    Mod+N { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "notifications" "toggleHistory"; }
+    Mod+Shift+N { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "notifications" "toggleDND"; }
+    
+    // -------------------------------------------------------------------------
+    // WINDOW MANAGEMENT
+    // -------------------------------------------------------------------------
+    
+    // Close window
+    Mod+Q { close-window; }
+    
+    // Focus (arrows + vim keys without L - conflicts with lock)
+    Mod+Left { focus-column-left; }
+    Mod+Right { focus-column-right; }
+    Mod+Up { focus-window-up; }
+    Mod+Down { focus-window-down; }
+    Mod+H { focus-column-left; }
+    Mod+J { focus-window-down; }
+    Mod+K { focus-window-up; }
+    Mod+Semicolon { focus-column-right; }
+    
+    // Move windows
+    Mod+Shift+Left { move-column-left; }
+    Mod+Shift+Right { move-column-right; }
+    Mod+Shift+Up { move-window-up; }
+    Mod+Shift+Down { move-window-down; }
+    Mod+Shift+H { move-column-left; }
+    Mod+Shift+J { move-window-down; }
+    Mod+Shift+K { move-window-up; }
+    Mod+Shift+Semicolon { move-column-right; }
+    
+    // Focus first/last
+    Mod+Home { focus-column-first; }
+    Mod+End { focus-column-last; }
+    Mod+Shift+Home { move-column-to-first; }
+    Mod+Shift+End { move-column-to-last; }
+    
+    // Consume/expel windows (column management)
+    Mod+BracketLeft { consume-window-into-column; }
+    Mod+BracketRight { expel-window-from-column; }
+    
+    // Column width
+    Mod+R { switch-preset-column-width; }
+    Mod+Ctrl+R { reset-window-height; }
+    Mod+F { maximize-column; }
+    Mod+Shift+F { fullscreen-window; }
+    
+    // Resize
+    Mod+Minus { set-column-width "-10%"; }
+    Mod+Equal { set-column-width "+10%"; }
+    Mod+Shift+Minus { set-window-height "-10%"; }
+    Mod+Shift+Equal { set-window-height "+10%"; }
+    
+    // -------------------------------------------------------------------------
+    // WORKSPACES
+    // -------------------------------------------------------------------------
+    
+    // Switch workspace
+    Mod+1 { focus-workspace 1; }
+    Mod+2 { focus-workspace 2; }
+    Mod+3 { focus-workspace 3; }
+    Mod+4 { focus-workspace 4; }
+    Mod+5 { focus-workspace 5; }
+    Mod+6 { focus-workspace 6; }
+    Mod+7 { focus-workspace 7; }
+    Mod+8 { focus-workspace 8; }
+    Mod+9 { focus-workspace 9; }
+    
+    // Move to workspace
+    Mod+Shift+1 { move-column-to-workspace 1; }
+    Mod+Shift+2 { move-column-to-workspace 2; }
+    Mod+Shift+3 { move-column-to-workspace 3; }
+    Mod+Shift+4 { move-column-to-workspace 4; }
+    Mod+Shift+5 { move-column-to-workspace 5; }
+    Mod+Shift+6 { move-column-to-workspace 6; }
+    Mod+Shift+7 { move-column-to-workspace 7; }
+    Mod+Shift+8 { move-column-to-workspace 8; }
+    Mod+Shift+9 { move-column-to-workspace 9; }
+    
+    // Adjacent workspaces
+    Mod+Page_Down { focus-workspace-down; }
+    Mod+Page_Up { focus-workspace-up; }
+    Mod+Shift+Page_Down { move-column-to-workspace-down; }
+    Mod+Shift+Page_Up { move-column-to-workspace-up; }
+    
+    // Mouse scroll for workspaces
+    Mod+WheelScrollDown cooldown-ms=150 { focus-workspace-down; }
+    Mod+WheelScrollUp cooldown-ms=150 { focus-workspace-up; }
+    Mod+Shift+WheelScrollDown cooldown-ms=150 { move-column-to-workspace-down; }
+    Mod+Shift+WheelScrollUp cooldown-ms=150 { move-column-to-workspace-up; }
+    
+    // Scroll columns
+    Mod+WheelScrollLeft { focus-column-left; }
+    Mod+WheelScrollRight { focus-column-right; }
+    
+    // -------------------------------------------------------------------------
+    // MONITORS
+    // -------------------------------------------------------------------------
+    
+    Mod+Ctrl+Left { focus-monitor-left; }
+    Mod+Ctrl+Right { focus-monitor-right; }
+    Mod+Ctrl+Up { focus-monitor-up; }
+    Mod+Ctrl+Down { focus-monitor-down; }
+    
+    Mod+Ctrl+Shift+Left { move-column-to-monitor-left; }
+    Mod+Ctrl+Shift+Right { move-column-to-monitor-right; }
+    Mod+Ctrl+Shift+Up { move-column-to-monitor-up; }
+    Mod+Ctrl+Shift+Down { move-column-to-monitor-down; }
+    
+    // -------------------------------------------------------------------------
+    // MISC
+    // -------------------------------------------------------------------------
+    
+    // Terminal
+    Mod+Return { spawn "ghostty"; }
+    Mod+Shift+Return { spawn "kitty"; }
+    
+    // Screenshot (niri built-in)
+    Print { screenshot; }
+    Ctrl+Print { screenshot-screen; }
+    Alt+Print { screenshot-window; }
+    
+    // Overview
+    Mod+Tab { toggle-overview; }
+    
+    // Quit niri
+    Mod+Shift+E { quit; }
+    
+    // Power off monitors
+    Mod+Shift+P { power-off-monitors; }
+}

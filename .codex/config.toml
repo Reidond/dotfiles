@@ -1,0 +1,23 @@
+model = "gpt-5.2-codex"
+model_reasoning_effort = "high"
+experimental_use_rmcp_client = true
+
+[projects."/home/andriishafar"]
+trust_level = "trusted"
+
+[mcp_servers.context7]
+url = "https://mcp.context7.com/mcp"
+http_headers = { "CONTEXT7_API_KEY" = "${CONTEXT7_API_KEY}" }
+
+[mcp_servers.nuxt-ui]
+url = "https://ui.nuxt.com/mcp"
+
+[mcp_servers.figma]
+command = "sh"
+args = ["-c", "bunx figma-developer-mcp --figma-api-key=$FIGMA_API_KEY --stdio"]
+
+[mcp_servers.exa-web-search]
+url = "https://mcp.exa.ai/mcp?tools=web_search_exa"
+
+[mcp_servers.grep-app]
+url = "https://mcp.grep.app"

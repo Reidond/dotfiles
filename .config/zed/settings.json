@@ -1,0 +1,70 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run zed: open default settings from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "use_system_prompts": true,
+  "use_system_path_prompts": true,
+  "ui_font_weight": 400.0,
+  "ui_font_size": 16.0,
+  "language_models": {},
+  "outline_panel": {
+    "dock": "right"
+  },
+  "notification_panel": {
+    "dock": "left"
+  },
+  "git_panel": {
+    "sort_by_path": false,
+    "dock": "right"
+  },
+  "debugger": {
+    "dock": "right"
+  },
+  "agent": {
+    "default_model": {
+      "provider": "zed.dev",
+      "model": "claude-opus-4-5-thinking"
+    },
+    "always_allow_tool_actions": true,
+    "default_profile": "write",
+    "dock": "left",
+    "model_parameters": []
+  },
+  "project_panel": {
+    "dock": "right"
+  },
+  "tabs": {
+    "git_status": true
+  },
+  "ui_font_family": "Adwaita Sans",
+  "terminal": {
+    "dock": "left",
+    "font_family": "PragmataPro Mono",
+    "font_size": 14
+  },
+  "telemetry": {
+    "diagnostics": true,
+    "metrics": true
+  },
+  "minimap": {
+    "show": "auto"
+  },
+  "file_types": {
+    "plaintext": ["LICENSE"]
+  },
+  "icon_theme": "Zed (Default)",
+  "base_keymap": "VSCode",
+  "buffer_font_family": "PragmataPro Mono Liga",
+  "buffer_font_size": 16,
+  "buffer_font_features": { "liga": true, "calt": true },
+  "theme": {
+    "mode": "system",
+    "light": "Github Light",
+    "dark": "Github Dark"
+  }
+}

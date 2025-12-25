@@ -17,6 +17,23 @@ paths = [
     ".local/bin/mkv_to_h265_mp4.sh",
     ".local/bin/noctalia-gnome-theme-sync.sh",
     ".local/bin/toggle-mic.sh",
+    ".gemini/settings.json",
+    ".codex/config.toml",
+    ".bashrc.d/20-rust-userland.sh",
+    ".opencode/command",
+    ".config/gh/config.yml",
+    ".config/ghostty/config",
+    ".config/mise/config.toml",
+    ".config/niri/config.kdl",
+    ".config/noctalia/plugins.json",
+    ".config/noctalia/settings.json",
+    ".config/opencode/opencode.json",
+    ".config/opencode/oh-my-opencode.json",
+    ".config/oxker/config.toml",
+    ".config/pipewire/pipewire.conf.d/sample-rates.conf",
+    ".config/zed/settings.json",
+    ".config/chrome-flags.conf",
+    ".config/chrome-canary-flags.conf",
 ]
 
 [ignore]
