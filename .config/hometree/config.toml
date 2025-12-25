@@ -13,6 +13,10 @@ paths = [
     "src/charidy/bootstrap.sh",
     ".var/app/com.github.wwmm.easyeffects/config/easyeffects/db",
     ".var/app/com.github.wwmm.easyeffects/data/easyeffects/output",
+    ".local/bin/get-ghostty-themes.sh",
+    ".local/bin/mkv_to_h265_mp4.sh",
+    ".local/bin/noctalia-gnome-theme-sync.sh",
+    ".local/bin/toggle-mic.sh",
 ]
 
 [ignore]
