@@ -24,6 +24,7 @@ patterns = [
     "environment.sh",
     ".ssh/config",
     ".ssh/github.pub",
+    ".gnupg/gpg-agent.conf",
 ]
 
 [watch]
@@ -51,3 +52,6 @@ path = ".ssh/config"
 
 [[secrets.rules]]
 path = ".ssh/github.pub"
+
+[[secrets.rules]]
+path = ".gnupg/gpg-agent.conf"
