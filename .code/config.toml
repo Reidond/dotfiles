@@ -1,0 +1,60 @@
+model = "gpt-5.2-codex"
+model_reasoning_effort = "high"
+experimental_use_rmcp_client = true
+tui = { cached_terminal_background.is_dark = true, cached_terminal_background.term = "xterm-256color", cached_terminal_background.colorfgbg = "15;0", cached_terminal_background.source = "colorfgbg", cached_terminal_background.rgb = "000000" , spinner = { name = "diamond" } , theme = { name = "dark-zen-garden" } }
+preferred_model_reasoning_effort = "high"
+auto_upgrade_enabled = true
+
+[projects."/home/andriishafar"]
+trust_level = "trusted"
+
+[projects."/home/andriishafar/src/charidy"]
+trust_level = "trusted"
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
+
+[projects."/home/andriishafar/src/charidy/dashboard-v2"]
+trust_level = "trusted"
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
+
+[projects."/home/andriishafar/src/quicksetd"]
+trust_level = "trusted"
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
+
+[projects."/home/andriishafar/src/home"]
+trust_level = "trusted"
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
+
+[projects."/home/andriishafar/src/hometree"]
+trust_level = "trusted"
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
+
+[projects."/home/andriishafar/src/phd"]
+trust_level = "trusted"
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
+
+[mcp_servers.context7]
+url = "https://mcp.context7.com/mcp"
+http_headers = { "CONTEXT7_API_KEY" = "${CONTEXT7_API_KEY}" }
+
+[mcp_servers.nuxt-ui]
+url = "https://ui.nuxt.com/mcp"
+
+# [mcp_servers.figma]
+# command = "bunx"
+# args = ["figma-developer-mcp --stdio"]
+
+[mcp_servers.exa-web-search]
+url = "https://mcp.exa.ai/mcp?tools=web_search_exa"
+
+[mcp_servers.grep-app]
+url = "https://mcp.grep.app"
+
+[notice]
+hide_gpt5_2_migration_prompt = true
+hide_gpt5_2_codex_migration_prompt = true

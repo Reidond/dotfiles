@@ -34,6 +34,9 @@ paths = [
     ".config/zed/settings.json",
     ".config/chrome-flags.conf",
     ".config/chrome-canary-flags.conf",
+    ".code/config.toml",
+    ".config/fresh/config.json",
+    ".config/gh/hosts.yml",
 ]
 
 [ignore]
@@ -42,6 +45,7 @@ patterns = [
     ".ssh/config",
     ".ssh/github.pub",
     ".gnupg/gpg-agent.conf",
+    ".config/glab-cli/config.yml",
 ]
 
 [watch]
@@ -72,3 +76,6 @@ path = ".ssh/github.pub"
 
 [[secrets.rules]]
 path = ".gnupg/gpg-agent.conf"
+
+[[secrets.rules]]
+path = ".config/glab-cli/config.yml"
