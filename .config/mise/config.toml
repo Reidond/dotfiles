@@ -4,7 +4,6 @@ cargo = "latest"
 cargo-binstall = "latest"
 "cargo:broot" = "latest"
 "cargo:fresh-editor" = "latest"
-"cargo:sd" = "latest"
 go = "latest"
 "go:github.com/cweill/gotests/gotests" = "latest"
 "go:github.com/fatih/gomodifytags" = "latest"
@@ -22,8 +21,23 @@ npm = "latest"
 "npm:wrangler" = "latest"
 pnpm = "latest"
 rust = "stable"
+starship = "latest"
 usage = "latest"
 zig = "latest"
+bat = "latest"
+delta = "latest"
+bottom = "latest"
+eza = "latest"
+zoxide = "latest"
+ripgrep = "latest"
+sd = "latest"
+dust = "latest"
+duf = "latest"
+fd = "latest"
+"cargo:procs" = "latest"
 
 [settings]
 experimental = false
+
+[settings.cargo]
+binstall = true
