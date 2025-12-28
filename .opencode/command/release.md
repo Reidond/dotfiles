@@ -1,7 +1,6 @@
 ---
 description: Create feature-based commits and bump version (major/minor/patch)
 argument-hint: "[major|minor|patch] - optional, auto-detected if not provided"
-model: opencode/big-pickle
 ---
 
 # Release: Feature-Based Commits and Version Bump

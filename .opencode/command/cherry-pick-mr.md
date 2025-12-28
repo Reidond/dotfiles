@@ -1,6 +1,5 @@
 ---
 description: Cherry-pick commit(s) to a new branch from master and create a MR
-model: opencode/big-pickle
 ---
 
 # Cherry-Pick and Create MR
