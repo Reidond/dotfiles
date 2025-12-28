@@ -38,6 +38,7 @@ paths = [
     ".config/fresh/config.json",
     ".config/gh/hosts.yml",
     ".bashrc.d/30-systemd-sysext.sh",
+    ".config/opencode/command",
 ]
 
 [ignore]

@@ -4,7 +4,8 @@
   "plugin": [
     "opencode-antigravity-auth@1.2.0",
     "opencode-openai-codex-auth",
-    "oh-my-opencode"
+    "oh-my-opencode",
+    "opencode-supermemory@latest"
   ],
   "mcp": {
     "figma": {
