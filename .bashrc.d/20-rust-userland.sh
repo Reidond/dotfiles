@@ -80,6 +80,8 @@ if [ "$__interactive" -eq 1 ] && [ "$__mode" = full ]; then
 
     # Do not override sed. Provide an explicit helper if sd exists.
     command -v sd   >/dev/null 2>&1 && alias sdr='sd'
+
+    command -v homeree >/dev/null 2>&1 && alias ht="hometree"
 fi
 
 # Fedora-safe helpers.

@@ -1,6 +1,6 @@
 [repo]
-git_dir = "/home/andriishafar/.local/share/hometree/repo.git"
-work_tree = "/home/andriishafar"
+git_dir = "/var/home/andriishafar/.local/share/hometree/repo.git"
+work_tree = "/var/home/andriishafar"
 
 [manage]
 paths = [
@@ -37,6 +37,7 @@ paths = [
     ".code/config.toml",
     ".config/fresh/config.json",
     ".config/gh/hosts.yml",
+    ".bashrc.d/30-systemd-sysext.sh",
 ]
 
 [ignore]
