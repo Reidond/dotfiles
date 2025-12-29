@@ -42,6 +42,7 @@ paths = [
     ".local/bin/system-update",
     ".config/systemd/user/system-update-refresh.service",
     ".config/systemd/user/system-update-refresh.timer",
+    "flatpak-apps.txt",
 ]
 
 [ignore]

@@ -177,7 +177,6 @@ cursor {
 
 environment {
     QT_QPA_PLATFORMTHEME "gtk3"
-    QT_WAYLAND_DECORATION "adwaita"
     GDK_SCALE "1.75"
     XCURSOR_THEME "Adwaita"
     XCURSOR_SIZE "24"

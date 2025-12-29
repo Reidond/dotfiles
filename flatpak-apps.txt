@@ -1,0 +1,13 @@
+be.alexandervanhee.gradia
+com.bitwarden.desktop
+com.brave.Browser
+com.discordapp.Discord
+com.github.wwmm.easyeffects
+com.mattjakeman.ExtensionManager
+com.ranfdev.DistroShelf
+com.valvesoftware.Steam
+com.vysp3r.ProtonPlus
+io.github.ilya_zlobintsev.LACT
+io.github.seadve.Kooha
+it.mijorus.smile
+page.tesk.Refine
