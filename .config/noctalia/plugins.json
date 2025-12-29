@@ -10,9 +10,6 @@
         "mini-docker": {
             "enabled": true
         },
-        "network-indicator": {
-            "enabled": true
-        },
         "update-count": {
             "enabled": true
         }

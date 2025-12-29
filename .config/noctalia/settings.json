@@ -4,6 +4,7 @@
         "customLaunchPrefixEnabled": false,
         "enableClipPreview": true,
         "enableClipboardHistory": false,
+        "iconMode": "tabler",
         "pinnedExecs": [
         ],
         "position": "center",
@@ -11,7 +12,7 @@
         "sortByMostUsed": true,
         "terminalCommand": "ghostty",
         "useApp2Unit": false,
-        "viewMode": "list"
+        "viewMode": "grid"
     },
     "audio": {
         "cavaFrameRate": 30,
@@ -19,14 +20,13 @@
         "mprisBlacklist": [
         ],
         "preferredPlayer": "",
-        "visualizerQuality": "high",
         "visualizerType": "linear",
         "volumeOverdrive": false,
         "volumeStep": 5
     },
     "bar": {
-        "capsuleOpacity": 1,
-        "density": "default",
+        "capsuleOpacity": 0.1,
+        "density": "comfortable",
         "exclusive": true,
         "floating": false,
         "marginHorizontal": 0.25,
@@ -116,6 +116,9 @@
                     ]
                 },
                 {
+                    "id": "plugin:update-count"
+                },
+                {
                     "id": "plugin:mini-docker"
                 },
                 {
@@ -136,12 +139,6 @@
                 {
                     "displayMode": "onhover",
                     "id": "Brightness"
-                },
-                {
-                    "id": "plugin:update-count"
-                },
-                {
-                    "id": "plugin:network-indicator"
                 },
                 {
                     "diskPath": "/",
@@ -177,7 +174,7 @@
     },
     "brightness": {
         "brightnessStep": 5,
-        "enableDdcSupport": true,
+        "enableDdcSupport": false,
         "enforceMinimum": true
     },
     "calendar": {
@@ -202,13 +199,13 @@
     },
     "colorSchemes": {
         "darkMode": true,
-        "generateTemplatesForPredefined": true,
+        "generateTemplatesForPredefined": false,
         "manualSunrise": "06:30",
         "manualSunset": "18:30",
         "matugenSchemeType": "scheme-fruit-salad",
-        "predefinedScheme": "Adwaita",
+        "predefinedScheme": "Everdeer",
         "schedulingMode": "off",
-        "useWallpaperColors": false
+        "useWallpaperColors": true
     },
     "controlCenter": {
         "cards": [
@@ -270,20 +267,22 @@
         }
     },
     "desktopWidgets": {
-        "editMode": false,
         "enabled": false,
+        "gridSnap": false,
         "monitorWidgets": [
         ]
     },
     "dock": {
+        "animationSpeed": 1,
         "backgroundOpacity": 1,
         "colorizeIcons": false,
         "deadOpacity": 0.6,
         "displayMode": "auto_hide",
-        "enabled": false,
+        "enabled": true,
         "floatingRatio": 1,
         "inactiveIndicators": false,
         "monitors": [
+            "DP-3"
         ],
         "onlySameOutput": true,
         "pinnedApps": [
@@ -302,7 +301,7 @@
         "enableShadows": true,
         "forceBlackScreenCorners": false,
         "iRadiusRatio": 1,
-        "language": "",
+        "language": "en",
         "lockOnSuspend": true,
         "radiusRatio": 1,
         "scaleRatio": 1,
@@ -317,6 +316,8 @@
     "hooks": {
         "darkModeChange": "/home/andriishafar/.local/bin/noctalia-gnome-theme-sync.sh $1",
         "enabled": true,
+        "performanceModeDisabled": "",
+        "performanceModeEnabled": "",
         "screenLock": "",
         "screenUnlock": "",
         "wallpaperChange": ""
@@ -437,7 +438,7 @@
         ],
         "showHeader": true
     },
-    "settingsVersion": 31,
+    "settingsVersion": 32,
     "systemMonitor": {
         "cpuCriticalThreshold": 90,
         "cpuPollingInterval": 3000,
@@ -446,7 +447,7 @@
         "diskCriticalThreshold": 90,
         "diskPollingInterval": 3000,
         "diskWarningThreshold": 80,
-        "enableNvidiaGpu": false,
+        "enableDgpuMonitoring": false,
         "gpuCriticalThreshold": 90,
         "gpuPollingInterval": 3000,
         "gpuWarningThreshold": 80,
@@ -470,12 +471,15 @@
         "foot": false,
         "fuzzel": false,
         "ghostty": false,
-        "gtk": true,
-        "kcolorscheme": true,
+        "gtk": false,
+        "helix": false,
+        "hyprland": false,
+        "kcolorscheme": false,
         "kitty": false,
-        "niri": false,
+        "mango": false,
+        "niri": true,
         "pywalfox": false,
-        "qt": true,
+        "qt": false,
         "spicetify": false,
         "telegram": false,
         "vicinae": false,
@@ -485,17 +489,20 @@
         "zed": false
     },
     "ui": {
+        "bluetoothDetailsViewMode": "grid",
+        "bluetoothHideUnnamedDevices": false,
         "fontDefault": "Adwaita Sans",
         "fontDefaultScale": 1,
-        "fontFixed": "PragmataPro Mono",
+        "fontFixed": "Adwaita Mono",
         "fontFixedScale": 1,
         "panelBackgroundOpacity": 1,
         "panelsAttachedToBar": true,
         "settingsPanelMode": "attached",
-        "tooltipsEnabled": true
+        "tooltipsEnabled": true,
+        "wifiDetailsViewMode": "grid"
     },
     "wallpaper": {
-        "directory": "/home/andriishafar/Картинки/Wallpapers",
+        "directory": "/home/andriishafar/.local/share/backgrounds",
         "enableMultiMonitorDirectories": false,
         "enabled": true,
         "fillColor": "#000000",
@@ -503,11 +510,11 @@
         "hideWallpaperFilenames": false,
         "monitorDirectories": [
         ],
-        "overviewEnabled": false,
+        "overviewEnabled": true,
         "panelPosition": "follow_bar",
         "randomEnabled": false,
         "randomIntervalSec": 300,
-        "recursiveSearch": false,
+        "recursiveSearch": true,
         "setWallpaperOnAllMonitors": true,
         "transitionDuration": 1500,
         "transitionEdgeSmoothness": 0.05,
@@ -517,6 +524,7 @@
         "wallhavenOrder": "desc",
         "wallhavenPurity": "100",
         "wallhavenQuery": "",
+        "wallhavenRatios": "",
         "wallhavenResolutionHeight": "",
         "wallhavenResolutionMode": "atleast",
         "wallhavenResolutionWidth": "",

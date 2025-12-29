@@ -71,7 +71,7 @@ layout {
 
     // Border - subtle GNOME-like styling  
     border {
-        width 1
+        width 0
         active-color "#3584e4"
         inactive-color "#3d3846"
     }
@@ -176,7 +176,7 @@ cursor {
 // ============================================================================
 
 environment {
-    QT_QPA_PLATFORMTHEME "gtk3"
+    QT_QPA_PLATFORMTHEME "wayland"
     GDK_SCALE "1.75"
     XCURSOR_THEME "Adwaita"
     XCURSOR_SIZE "24"
@@ -382,3 +382,4 @@ binds {
     // Power off monitors
     Mod+Shift+P { power-off-monitors; }
 }
+include "./noctalia.kdl"

@@ -27,5 +27,13 @@ clipboard-write = allow
 window-subtitle = working-directory
 window-decoration = client
 
+# Match libadwaita's ~12px corner radius
+window-padding-x = 10
+window-padding-y = 10
+window-padding-balance = true
+window-padding-color = extend
+
 # keybind = global:super+f1=toggle_quick_terminal
 keybind = shift+enter=text:\x1b\r
+
+# command = distrobox enter ubuntu
