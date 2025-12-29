@@ -1,0 +1,10 @@
+[Unit]
+Description=Periodically refresh system update cache
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=30min
+RandomizedDelaySec=5min
+
+[Install]
+WantedBy=timers.target

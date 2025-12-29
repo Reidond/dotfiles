@@ -39,6 +39,9 @@ paths = [
     ".config/gh/hosts.yml",
     ".bashrc.d/30-systemd-sysext.sh",
     ".config/opencode/command",
+    ".local/bin/system-update",
+    ".config/systemd/user/system-update-refresh.service",
+    ".config/systemd/user/system-update-refresh.timer",
 ]
 
 [ignore]

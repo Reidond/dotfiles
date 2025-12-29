@@ -1,0 +1,8 @@
+[Unit]
+Description=Refresh system update cache (rpm-ostree + flatpak)
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/system-update refresh
+Nice=19
+IOSchedulingClass=idle

@@ -1,0 +1,184 @@
+#!/bin/bash
+#
+# system-update - Unified update script for rpm-ostree and Flatpak
+# Usage:
+#   system-update count    - Output total number of available updates (integer, fast/cached)
+#   system-update refresh  - Fetch latest update info and cache it
+#   system-update upgrade  - Perform system upgrade (rpm-ostree + flatpak)
+#   system-update check    - Show detailed update information
+#
+
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/system-update"
+CACHE_FILE="$CACHE_DIR/rpm-ostree-count"
+CACHE_MAX_AGE=3600  # 1 hour in seconds
+
+mkdir -p "$CACHE_DIR"
+
+# Fast: check rpm-ostree status for pending/staged updates (no network)
+count_rpm_ostree_pending() {
+    # Check if there's a pending deployment from auto-updates
+    if rpm-ostree status 2>/dev/null | grep -q "pending\|staged"; then
+        echo "1"
+    else
+        echo "0"
+    fi
+}
+
+# Cached: read from cache file if fresh enough
+count_rpm_ostree_cached() {
+    if [[ -f "$CACHE_FILE" ]]; then
+        local cache_age=$(($(date +%s) - $(stat -c %Y "$CACHE_FILE" 2>/dev/null || echo 0)))
+        if [[ $cache_age -lt $CACHE_MAX_AGE ]]; then
+            cat "$CACHE_FILE"
+            return
+        fi
+    fi
+    # Cache stale or missing - return pending count (fast)
+    count_rpm_ostree_pending
+}
+
+# Slow: fetch and parse actual update count (requires network)
+count_rpm_ostree_fetch() {
+    local output count
+    output=$(rpm-ostree upgrade --check 2>&1)
+    
+    if echo "$output" | grep -q "AvailableUpdate"; then
+        # Parse "Diff: 22 upgraded" format
+        count=$(echo "$output" | grep -oP 'Diff:\s*\K\d+' | head -1)
+        if [[ -z "$count" || "$count" -eq 0 ]]; then
+            count=1  # At least 1 update if AvailableUpdate present
+        fi
+    else
+        count=0
+    fi
+    
+    # Cache the result
+    echo "$count" > "$CACHE_FILE"
+    echo "$count"
+}
+
+count_flatpak_updates() {
+    flatpak remote-ls --updates 2>/dev/null | wc -l | tr -d ' '
+}
+
+count_all_updates() {
+    local rpm_count flatpak_count total
+    rpm_count=$(count_rpm_ostree_cached)
+    flatpak_count=$(count_flatpak_updates)
+    total=$((rpm_count + flatpak_count))
+    echo "$total"
+}
+
+refresh_cache() {
+    echo "Refreshing rpm-ostree update cache..."
+    local count
+    count=$(count_rpm_ostree_fetch)
+    echo "Cached rpm-ostree updates: $count"
+    echo "Flatpak updates: $(count_flatpak_updates)"
+}
+
+check_updates() {
+    echo "=== rpm-ostree Updates ==="
+    local output
+    output=$(rpm-ostree upgrade --check 2>&1)
+    echo "$output"
+    
+    # Extract and cache the count
+    local rpm_count=0
+    if echo "$output" | grep -q "AvailableUpdate"; then
+        rpm_count=$(echo "$output" | grep -oP 'Diff:\s*\K\d+' | head -1)
+        [[ -z "$rpm_count" ]] && rpm_count=1
+    fi
+    echo "$rpm_count" > "$CACHE_FILE"
+    
+    echo ""
+    echo "=== Flatpak Updates ==="
+    local flatpak_updates flatpak_count
+    flatpak_updates=$(flatpak remote-ls --updates 2>/dev/null)
+    flatpak_count=$(echo "$flatpak_updates" | grep -c . || echo 0)
+    
+    if [[ -n "$flatpak_updates" ]]; then
+        echo "$flatpak_updates"
+    else
+        echo "No Flatpak updates available"
+    fi
+    
+    echo ""
+    echo "=== Summary ==="
+    echo "rpm-ostree: $rpm_count update(s)"
+    echo "Flatpak: $flatpak_count update(s)"
+    echo "Total: $((rpm_count + flatpak_count)) update(s)"
+}
+
+perform_upgrade() {
+    local has_errors=0
+    
+    echo "=== Updating Flatpak applications ==="
+    if ! flatpak update -y; then
+        echo "Warning: Flatpak update encountered issues"
+        has_errors=1
+    fi
+    
+    echo ""
+    echo "=== Updating rpm-ostree (base system) ==="
+    if ! rpm-ostree upgrade; then
+        echo "Warning: rpm-ostree upgrade encountered issues"
+        has_errors=1
+    fi
+    
+    # Clear cache after upgrade
+    rm -f "$CACHE_FILE"
+    
+    echo ""
+    if [[ $has_errors -eq 0 ]]; then
+        echo "All updates completed successfully!"
+        echo "Note: If rpm-ostree applied updates, a reboot is required."
+    else
+        echo "Updates completed with some warnings. Check output above."
+    fi
+    
+    return $has_errors
+}
+
+show_help() {
+    cat << 'EOF'
+system-update - Unified update script for rpm-ostree and Flatpak
+
+Usage:
+    system-update count     Output total available updates (fast, uses cache)
+    system-update refresh   Fetch fresh update info and cache it
+    system-update upgrade   Perform full system upgrade
+    system-update check     Show detailed update information (also caches)
+    system-update help      Show this help message
+
+For GNOME Extensions (Updates Indicator):
+    Custom Update Count Command:    system-update count
+    Custom System Update Command:   system-update upgrade
+
+Note: 'count' uses cached rpm-ostree data for speed. Use 'refresh' or 'check'
+      to fetch latest data. Cache expires after 1 hour.
+EOF
+}
+
+case "${1:-help}" in
+    count)
+        count_all_updates
+        ;;
+    refresh)
+        refresh_cache
+        ;;
+    upgrade|update)
+        perform_upgrade
+        ;;
+    check)
+        check_updates
+        ;;
+    help|--help|-h)
+        show_help
+        ;;
+    *)
+        echo "Unknown command: $1" >&2
+        show_help
+        exit 1
+        ;;
+esac
