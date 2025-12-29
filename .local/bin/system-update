@@ -1,24 +1,79 @@
 #!/bin/bash
 #
-# system-update - Unified update script for rpm-ostree and Flatpak
+# system-update - Unified update script for Flatpak, dnf, and rpm-ostree
 # Usage:
 #   system-update count    - Output total number of available updates (integer, fast/cached)
 #   system-update refresh  - Fetch latest update info and cache it
-#   system-update upgrade  - Perform system upgrade (rpm-ostree + flatpak)
+#   system-update upgrade  - Perform system upgrade (flatpak + dnf/rpm-ostree)
 #   system-update check    - Show detailed update information
 #
 
 CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/system-update"
-CACHE_FILE="$CACHE_DIR/rpm-ostree-count"
+CACHE_FILE_RPM_OSTREE="$CACHE_DIR/rpm-ostree-count"
+CACHE_FILE_DNF="$CACHE_DIR/dnf-count"
 CACHE_MAX_AGE=3600  # 1 hour in seconds
 
 mkdir -p "$CACHE_DIR"
 
+# Check if commands are available
+has_flatpak() { command -v flatpak &>/dev/null; }
+has_dnf() { command -v dnf &>/dev/null; }
+has_rpm_ostree() { command -v rpm-ostree &>/dev/null; }
+
+# ===== Flatpak functions =====
+count_flatpak_updates() {
+    if has_flatpak; then
+        flatpak remote-ls --updates 2>/dev/null | wc -l | tr -d ' '
+    else
+        echo "0"
+    fi
+}
+
+# ===== DNF functions =====
+count_dnf_pending() {
+    if has_dnf; then
+        dnf check-update -q 2>/dev/null | grep -c . || echo "0"
+    else
+        echo "0"
+    fi
+}
+
+count_dnf_cached() {
+    if ! has_dnf; then
+        echo "0"
+        return
+    fi
+    if [[ -f "$CACHE_FILE_DNF" ]]; then
+        local cache_age=$(($(date +%s) - $(stat -c %Y "$CACHE_FILE_DNF" 2>/dev/null || echo 0)))
+        if [[ $cache_age -lt $CACHE_MAX_AGE ]]; then
+            cat "$CACHE_FILE_DNF"
+            return
+        fi
+    fi
+    count_dnf_pending
+}
+
+count_dnf_fetch() {
+    if ! has_dnf; then
+        echo "0"
+        return
+    fi
+    local count
+    count=$(dnf check-update -q 2>/dev/null | grep -c . || echo "0")
+    echo "$count" > "$CACHE_FILE_DNF"
+    echo "$count"
+}
+
+# ===== rpm-ostree functions =====
 # Fast: check rpm-ostree status for pending/staged updates (no network)
 count_rpm_ostree_pending() {
-    # Check if there's a pending deployment from auto-updates
-    if rpm-ostree status 2>/dev/null | grep -q "pending\|staged"; then
-        echo "1"
+    if has_rpm_ostree; then
+        # Check if there's a pending deployment from auto-updates
+        if rpm-ostree status 2>/dev/null | grep -q "pending\|staged"; then
+            echo "1"
+        else
+            echo "0"
+        fi
     else
         echo "0"
     fi
@@ -26,10 +81,14 @@ count_rpm_ostree_pending() {
 
 # Cached: read from cache file if fresh enough
 count_rpm_ostree_cached() {
-    if [[ -f "$CACHE_FILE" ]]; then
-        local cache_age=$(($(date +%s) - $(stat -c %Y "$CACHE_FILE" 2>/dev/null || echo 0)))
+    if ! has_rpm_ostree; then
+        echo "0"
+        return
+    fi
+    if [[ -f "$CACHE_FILE_RPM_OSTREE" ]]; then
+        local cache_age=$(($(date +%s) - $(stat -c %Y "$CACHE_FILE_RPM_OSTREE" 2>/dev/null || echo 0)))
         if [[ $cache_age -lt $CACHE_MAX_AGE ]]; then
-            cat "$CACHE_FILE"
+            cat "$CACHE_FILE_RPM_OSTREE"
             return
         fi
     fi
@@ -39,6 +98,10 @@ count_rpm_ostree_cached() {
 
 # Slow: fetch and parse actual update count (requires network)
 count_rpm_ostree_fetch() {
+    if ! has_rpm_ostree; then
+        echo "0"
+        return
+    fi
     local output count
     output=$(rpm-ostree upgrade --check 2>&1)
     
@@ -53,86 +116,141 @@ count_rpm_ostree_fetch() {
     fi
     
     # Cache the result
-    echo "$count" > "$CACHE_FILE"
+    echo "$count" > "$CACHE_FILE_RPM_OSTREE"
     echo "$count"
 }
 
-count_flatpak_updates() {
-    flatpak remote-ls --updates 2>/dev/null | wc -l | tr -d ' '
-}
-
+# ===== Combined functions =====
 count_all_updates() {
-    local rpm_count flatpak_count total
-    rpm_count=$(count_rpm_ostree_cached)
+    local flatpak_count dnf_count rpm_count total
     flatpak_count=$(count_flatpak_updates)
-    total=$((rpm_count + flatpak_count))
+    dnf_count=$(count_dnf_cached)
+    rpm_count=$(count_rpm_ostree_cached)
+    total=$((flatpak_count + dnf_count + rpm_count))
     echo "$total"
 }
 
 refresh_cache() {
-    echo "Refreshing rpm-ostree update cache..."
-    local count
-    count=$(count_rpm_ostree_fetch)
-    echo "Cached rpm-ostree updates: $count"
-    echo "Flatpak updates: $(count_flatpak_updates)"
+    local flatpak_count=0 dnf_count=0 rpm_count=0
+
+    if has_flatpak; then
+        flatpak_count=$(count_flatpak_updates)
+        echo "Flatpak updates: $flatpak_count"
+    fi
+
+    if has_dnf; then
+        echo "Refreshing dnf update cache..."
+        dnf_count=$(count_dnf_fetch)
+        echo "dnf updates: $dnf_count"
+    fi
+
+    if has_rpm_ostree; then
+        echo "Refreshing rpm-ostree update cache..."
+        rpm_count=$(count_rpm_ostree_fetch)
+        echo "rpm-ostree updates: $rpm_count"
+    fi
 }
 
 check_updates() {
-    echo "=== rpm-ostree Updates ==="
-    local output
-    output=$(rpm-ostree upgrade --check 2>&1)
-    echo "$output"
-    
-    # Extract and cache the count
-    local rpm_count=0
-    if echo "$output" | grep -q "AvailableUpdate"; then
-        rpm_count=$(echo "$output" | grep -oP 'Diff:\s*\K\d+' | head -1)
-        [[ -z "$rpm_count" ]] && rpm_count=1
+    local flatpak_count=0 dnf_count=0 rpm_count=0
+
+    # Flatpak
+    if has_flatpak; then
+        echo "=== Flatpak Updates ==="
+        local flatpak_updates
+        flatpak_updates=$(flatpak remote-ls --updates 2>/dev/null)
+        flatpak_count=$(echo "$flatpak_updates" | grep -c . || echo 0)
+        
+        if [[ -n "$flatpak_updates" ]]; then
+            echo "$flatpak_updates"
+        else
+            echo "No Flatpak updates available"
+        fi
+        echo ""
     fi
-    echo "$rpm_count" > "$CACHE_FILE"
-    
-    echo ""
-    echo "=== Flatpak Updates ==="
-    local flatpak_updates flatpak_count
-    flatpak_updates=$(flatpak remote-ls --updates 2>/dev/null)
-    flatpak_count=$(echo "$flatpak_updates" | grep -c . || echo 0)
-    
-    if [[ -n "$flatpak_updates" ]]; then
-        echo "$flatpak_updates"
-    else
-        echo "No Flatpak updates available"
+
+    # DNF
+    if has_dnf; then
+        echo "=== dnf Updates ==="
+        local dnf_updates
+        dnf_updates=$(dnf check-update -q 2>/dev/null)
+        dnf_count=$(echo "$dnf_updates" | grep -c . || echo 0)
+        
+        if [[ -n "$dnf_updates" ]]; then
+            echo "$dnf_updates"
+        else
+            echo "No dnf updates available"
+        fi
+        echo "$dnf_count" > "$CACHE_FILE_DNF"
+        echo ""
+    fi
+
+    # rpm-ostree
+    if has_rpm_ostree; then
+        echo "=== rpm-ostree Updates ==="
+        local output
+        output=$(rpm-ostree upgrade --check 2>&1)
+        echo "$output"
+        
+        # Extract and cache the count
+        if echo "$output" | grep -q "AvailableUpdate"; then
+            rpm_count=$(echo "$output" | grep -oP 'Diff:\s*\K\d+' | head -1)
+            [[ -z "$rpm_count" ]] && rpm_count=1
+        fi
+        echo "$rpm_count" > "$CACHE_FILE_RPM_OSTREE"
+        echo ""
     fi
     
-    echo ""
     echo "=== Summary ==="
-    echo "rpm-ostree: $rpm_count update(s)"
-    echo "Flatpak: $flatpak_count update(s)"
-    echo "Total: $((rpm_count + flatpak_count)) update(s)"
+    has_flatpak && echo "Flatpak: $flatpak_count update(s)"
+    has_dnf && echo "dnf: $dnf_count update(s)"
+    has_rpm_ostree && echo "rpm-ostree: $rpm_count update(s)"
+    echo "Total: $((flatpak_count + dnf_count + rpm_count)) update(s)"
 }
 
 perform_upgrade() {
     local has_errors=0
+    local has_rpm_ostree_updates=false
     
-    echo "=== Updating Flatpak applications ==="
-    if ! flatpak update -y; then
-        echo "Warning: Flatpak update encountered issues"
-        has_errors=1
+    # Flatpak
+    if has_flatpak; then
+        echo "=== Updating Flatpak applications ==="
+        if ! flatpak update -y; then
+            echo "Warning: Flatpak update encountered issues"
+            has_errors=1
+        fi
+        echo ""
+    fi
+
+    # DNF
+    if has_dnf; then
+        echo "=== Updating dnf packages ==="
+        if ! sudo dnf upgrade -y; then
+            echo "Warning: dnf upgrade encountered issues"
+            has_errors=1
+        fi
+        rm -f "$CACHE_FILE_DNF"
+        echo ""
     fi
     
-    echo ""
-    echo "=== Updating rpm-ostree (base system) ==="
-    if ! rpm-ostree upgrade; then
-        echo "Warning: rpm-ostree upgrade encountered issues"
-        has_errors=1
+    # rpm-ostree
+    if has_rpm_ostree; then
+        echo "=== Updating rpm-ostree (base system) ==="
+        if ! rpm-ostree upgrade; then
+            echo "Warning: rpm-ostree upgrade encountered issues"
+            has_errors=1
+        else
+            has_rpm_ostree_updates=true
+        fi
+        rm -f "$CACHE_FILE_RPM_OSTREE"
+        echo ""
     fi
     
-    # Clear cache after upgrade
-    rm -f "$CACHE_FILE"
-    
-    echo ""
     if [[ $has_errors -eq 0 ]]; then
         echo "All updates completed successfully!"
-        echo "Note: If rpm-ostree applied updates, a reboot is required."
+        if $has_rpm_ostree_updates; then
+            echo "Note: If rpm-ostree applied updates, a reboot is required."
+        fi
     else
         echo "Updates completed with some warnings. Check output above."
     fi
@@ -142,7 +260,7 @@ perform_upgrade() {
 
 show_help() {
     cat << 'EOF'
-system-update - Unified update script for rpm-ostree and Flatpak
+system-update - Unified update script for Flatpak, dnf, and rpm-ostree
 
 Usage:
     system-update count     Output total available updates (fast, uses cache)
@@ -155,7 +273,12 @@ For GNOME Extensions (Updates Indicator):
     Custom Update Count Command:    system-update count
     Custom System Update Command:   system-update upgrade
 
-Note: 'count' uses cached rpm-ostree data for speed. Use 'refresh' or 'check'
+Supported package managers (auto-detected):
+    - flatpak      (if available)
+    - dnf          (if available)
+    - rpm-ostree   (if available)
+
+Note: 'count' uses cached data for speed. Use 'refresh' or 'check'
       to fetch latest data. Cache expires after 1 hour.
 EOF
 }

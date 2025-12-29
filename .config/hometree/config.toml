@@ -43,6 +43,8 @@ paths = [
     ".config/systemd/user/system-update-refresh.service",
     ".config/systemd/user/system-update-refresh.timer",
     "flatpak-apps.txt",
+    ".config/noctalia/plugins/update-count/settings.json",
+    ".config/noctalia/colors.json",
 ]
 
 [ignore]
