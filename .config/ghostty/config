@@ -37,3 +37,4 @@ window-padding-color = extend
 keybind = shift+enter=text:\x1b\r
 
 # command = distrobox enter ubuntu
+command = /usr/bin/env -u POSIXLY_CORRECT /bin/bash

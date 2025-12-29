@@ -16,6 +16,8 @@ export PATH
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
 
+[[ -x "$HOME/.local/bin/mise" ]] && eval "$($HOME/.local/bin/mise activate bash)"
+
 # User specific aliases and functions
 if [ -d ~/.bashrc.d ]; then
     for rc in ~/.bashrc.d/*; do
@@ -25,7 +27,6 @@ if [ -d ~/.bashrc.d ]; then
     done
 fi
 unset rc
-[[ -x "$HOME/.local/bin/mise" ]] && eval "$($HOME/.local/bin/mise activate bash)"
 
 # opencode
 [[ -d "$HOME/.opencode/bin" ]] && export PATH="$HOME/.opencode/bin:$PATH"
