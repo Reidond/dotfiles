@@ -1,6 +1,6 @@
 [repo]
-git_dir = "/var/home/andriishafar/.local/share/hometree/repo.git"
-work_tree = "/var/home/andriishafar"
+git_dir = "/home/andriishafar/.local/share/hometree/repo.git"
+work_tree = "/home/andriishafar"
 
 [manage]
 paths = [
