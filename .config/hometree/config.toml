@@ -20,7 +20,6 @@ paths = [
     ".gemini/settings.json",
     ".codex/config.toml",
     ".bashrc.d/20-rust-userland.sh",
-    ".opencode/command",
     ".config/gh/config.yml",
     ".config/ghostty/config",
     ".config/mise/config.toml",
